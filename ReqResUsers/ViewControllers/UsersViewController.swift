@@ -42,18 +42,46 @@ class UsersViewController: UITableViewController {
 // MARK: - Networking
 extension UsersViewController {
     func fetchUsers() {
-        
-        NetworkManager.shared.fetch([User].self,
-                                    from: "https://reqres.in/api/users?page=2")
-        {
+        NetworkManager.shared.fetch(User.self, from: "https://reqres.in/api/users?page=2") {
             [weak self] result in
             switch result {
             case .success(let users):
-                self?.users = users
-                self?.tableView.reloadData()
+                print(users)
+//                self?.users = users.data
+//                self?.tableView.reloadData()
+                self?.successAlert()
             case .failure(let error):
                 print(error)
+                self?.failedAlert()
             }
+        }
+    }
+    // MARK: - Private Methods
+    private func successAlert() {
+        DispatchQueue.main.async {
+            let alert = UIAlertController(
+                title: "Success",
+                message: "You can see the results in the Debug aria",
+                preferredStyle: .alert
+            )
+            
+            let okAction = UIAlertAction(title: "OK", style: .default)
+            alert.addAction(okAction)
+            self.present(alert, animated: true)
+        }
+    }
+    
+    private func failedAlert() {
+        DispatchQueue.main.async {
+            let alert = UIAlertController(
+                title: "Failed",
+                message: "You can see error in the Debug aria",
+                preferredStyle: .alert
+            )
+            
+            let okAction = UIAlertAction(title: "OK", style: .default)
+            alert.addAction(okAction)
+            self.present(alert, animated: true)
         }
     }
 }
